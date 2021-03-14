@@ -1,0 +1,13 @@
+
+{
+  "name": "HV User-Land API",
+  "namespace": "https://hentaiverse.org",
+  "grant": [
+    "unsafeWindow"
+  ],
+  "run-at": "document-end",
+  "compatible": [
+    "Chrome/Chromium + Tampermonkey",
+    "Firefox + Greasemonkey"
+  ]
+}
