@@ -1,3 +1,4 @@
+/* eslint-disable node/no-unsupported-features/es-syntax */
 import typescript from '@rollup/plugin-typescript';
 import metablock from 'rollup-plugin-userscript-metablock';
 import pkgJson from './package.json';
@@ -16,27 +17,32 @@ const userScriptMetaBlockConfig = {
       'http://alt.hentaiverse.org/pages/showequip.php?*'
     ]
   }
-}
+};
 
 export default [{
   input: 'src/index.ts',
   output: [{
     format: 'iife',
     file: 'dist/userscript/hv-userland-api.user.js',
-    sourcemap: false,
+    name: 'unsafeWindow.HVUserLandApi',
     plugins: [
-      metablock(userScriptMetaBlockConfig),
-    ]
+      metablock(userScriptMetaBlockConfig)
+    ],
+    sourcemap: false
   }, {
     file: 'dist/mjs/index.mjs',
-    format: 'esm'
+    format: 'esm',
+    sourcemap: false
   }, {
-    file: 'dist/umd/index.js',
-    format: 'umd'
+    file: 'dist/cjs/index.js',
+    format: 'cjs',
+    name: 'HVUserLandApi',
+    sourcemap: false
   }],
   plugins: [
     typescript({
-      module: 'ES2015'
+      module: 'ES2015',
+      tsconfig: './tsconfig.json'
     })
   ]
 }];
