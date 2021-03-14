@@ -7,12 +7,12 @@ const msgStyle = 'background: transparent; color: #000';
 
 export const logger = {
   info(...msg: string[]): void {
-    console.log(`%c HVULAPI %c INFO %c ${msg.join(' ')}`, nameStyle, infoStyle, msgStyle);
+    console.log(`%c HVULAPI %c INFO %c`, nameStyle, infoStyle, msgStyle, msg);
   },
   warn(...msg: string[]): void {
-    console.log(`%c HVULAPI %c WARN %c ${msg.join(' ')}`, nameStyle, warnStyle, msgStyle);
+    console.log(`%c HVULAPI %c WARN %c`, nameStyle, warnStyle, msgStyle, msg);
   },
   error(...msg: string[]): void {
-    console.error(`%c HVULAPI %c ERROR %c ${msg.join(' ')}`, nameStyle, errorStyle, msgStyle);
+    console.error(`%c HVULAPI %c ERROR %c`, nameStyle, errorStyle, msgStyle, msg);
   }
 };

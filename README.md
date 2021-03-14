@@ -58,16 +58,8 @@ You can also ask your user to install dependency userscript, and you can access 
 const stamina = window.HentaiVerseUserLandApi.getStamina(); // 99
 ```
 
-## Documentation
+[API Guide for UserScript author](./docs)
 
-### `setMaxNetworkConnections(maxConnections: number): void`
+## License
 
-According to the [Rules](https://forums.e-hentai.org/index.php?showtopic=243549) by Nezu:
-
-> Out of battle, rate limits are unspecified, but may be enforced automatically by the server resulting in a lockout (which prevents any further actions or page loads). Regularly triggering this limiter risks bans. Script writers should avoid using multiple connection threads for requests, or limit them to the same 4 per second maximum for the safety of users.
-
-HVULAPI set a default max connections limit as `4`. However, since your users might have other userscripts installed, it is possible for them to reach Rate Limit and get `stock limit ban`. HVULAPI provide a function for you to override the max connections.
-
-```js
-hv.setMaxNetworkConnections(2);
-```
+The project is open-sourced under MIT license.

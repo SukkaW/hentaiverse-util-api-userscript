@@ -14,5 +14,8 @@ export function setMaxNetworkConnections(maxConnections: number): void {
 
 export { getStamina } from './lib/stamina';
 
-logger.info('HentaiVerse User-Land API (HVULAPI) has loaded!');
-logger.info('View documentation at https://github.com/SukkaW/hentaiverse-util-api-userscript');
+if (GM?.info?.script?.name === 'HV User-Land API') {
+  // Currently run in stand alone userscript
+  logger.info('HentaiVerse User-Land API (HVULAPI) has loaded!');
+  logger.info('View documentation at https://github.com/SukkaW/hentaiverse-util-api-userscript');
+}
