@@ -8,6 +8,6 @@ export async function setValue<T extends keyof HVULAPI.StoredValue>(key: T, valu
   return GM.setValue(key, value);
 }
 
-export async function removeValue(key: keyof HVULAPI.StoredValue) {
+export async function removeValue(key: keyof HVULAPI.StoredValue): Promise<void> {
   return GM.deleteValue(key);
 }

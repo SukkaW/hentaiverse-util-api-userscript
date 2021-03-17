@@ -1,0 +1,7 @@
+{
+  "entryPoints": ["src/index.ts"],
+  "out": "docs",
+  "name": "HVULAPI API Guide",
+  "includeVersion": true,
+  "readme": "none"
+}

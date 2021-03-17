@@ -1,5 +1,14 @@
 import { logger } from '../util/logger';
+import { fetchQueue } from './fetchQueue';
 
+/**
+ * Read and return current stamina. Return `null` when in-battle (`#stamina_readout` element just doesn't exist).
+ *
+ * ```js
+ * hv.stamina.getStamina();
+ * // 79
+ * ```
+ */
 export function getStamina(): number | null {
   const staminaReadOutEl = document.getElementById('stamina_readout');
   if (staminaReadOutEl) {

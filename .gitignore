@@ -4,6 +4,7 @@ tmp/
 *.log
 .idea/
 .tmp*
-temp*
+tmp*
 dist
 .env
+docs

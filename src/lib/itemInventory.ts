@@ -1,11 +1,22 @@
-import { fetchQueue } from '..';
+import { fetchQueue } from './fetchQueue';
 import { logger } from '../util/logger';
-import { callbackify } from '../util/callbackify';
+import { callbackify } from '../util/callackify';
 
+/**
+ * ```js
+ * const inventory = await hv.itemInventory.getItemInventoryAsync();
+ * console.log(inventory);
+ * // {
+ * //   Health Draught: 1000,
+ * //   Health Potion: 1000,
+ * //   ...
+ * // }
+ * ```
+ */
 export async function getItemInventoryAsync(): Promise<Record<string, number>> {
   const data: Record<string, number> = {};
 
-  let pageHtml = (await (await fetchQueue.add('?s=Character&ss=it')).text());
+  const pageHtml = (await (await fetchQueue.add('?s=Character&ss=it')).text());
   for (const match of pageHtml.matchAll(/>([\w\s]+?)<\/div><\/td><td>(\d+)<\/td>/gm)) {
     const item = match[1];
     const number = Number(match[2]);
@@ -20,4 +31,7 @@ export async function getItemInventoryAsync(): Promise<Record<string, number>> {
   return data;
 }
 
+/**
+ * Callbackify version of {@link getItemInventoryAsync}
+ */
 export const getItemInventory = callbackify(getItemInventoryAsync);

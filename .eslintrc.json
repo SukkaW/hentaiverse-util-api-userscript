@@ -1,15 +1,18 @@
 {
-  "extends": "sukka/node",
+  "extends": "sukka/typescript",
   "root": true,
   "parserOptions": {
-    "sourceType": "module"
+    "project": "./tsconfig.json"
   },
   "overrides": [
     {
       "files": [
-        "**/*.ts"
+        "**/*.js"
       ],
-      "extends": "sukka/node"
+      "extends": "sukka/node",
+      "parserOptions": {
+        "sourceType": "module"
+      }
     }
   ]
 }

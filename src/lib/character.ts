@@ -1,12 +1,10 @@
-import { callbackify } from '../util/callbackify';
+import { callbackify } from '../util/callackify';
 import { logger } from '../util/logger';
 import { getValue, setValue } from '../util/store';
 
 const rMatchLevel = /^(.+) Lv\.(\d+)/;
 
-export
-
-async function getDifficultyAsync(): Promise<string | null> {
+export async function getDifficultyAsync(): Promise<string | null> {
   const storedDifficulty = await getValue('difficulty');
   const levelEl = document.getElementById('level_readout');
 
