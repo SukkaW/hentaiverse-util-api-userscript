@@ -1,7 +1,8 @@
 import { FetchQueue } from './util/fetch-queue';
 import { logger } from './util/logger';
 
-export const version = '0.0.1';
+export const VERSION = '0.0.1';
+export const DEBUG = true;
 
 export const fetchQueue = new FetchQueue();
 
@@ -13,6 +14,7 @@ export function setMaxNetworkConnections(maxConnections: number): void {
 }
 
 export { getStamina } from './lib/stamina';
+export { getItemInventory } from './lib/itemInventory';
 
 if (GM?.info?.script?.name === 'HV User-Land API') {
   // Currently run in stand alone userscript

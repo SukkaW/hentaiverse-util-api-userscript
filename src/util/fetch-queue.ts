@@ -1,3 +1,7 @@
+import { logger } from './logger';
+
+const cache = new Map<string, Response>();
+
 /** Options for the fetch queue and all fetch requests. */
 export interface IFetchQueueOptions {
   /** Max live connection count of the queue. Default to 4. */
@@ -61,7 +65,7 @@ export class FetchQueue {
   /**
    * Add a request to the end of the queue.
    *
-   * @param url Request url or path (requires `baseURL` in options)
+   * @param url Request url
    * @param init Request init for fetch() API
    * @returns {IFetchQueuePromise} Request promise that can also cancel the request.
    */
@@ -115,10 +119,23 @@ export class FetchQueue {
       const item = this.pendingItems.shift()!;
       this.activeItems.push(item);
       item.state = ItemState.Active;
-      fetch(item.url, item.init).then(
-        (response) => this.handleResult(item, ItemState.Succeeded, response),
-        (reason) => this.handleResult(item, ItemState.Failed, reason)
-      );
+
+      const request = new Request(item.url, item.init);
+
+      if (cache.has(item.url)) {
+        logger.debug('#fetchQueue', `Cache Hit: ${item.url}`);
+        this.handleResult(item, ItemState.Succeeded, cache.get(item.url));
+      } else {
+        logger.debug('#fetchQueue', `Cache Miss: ${item.url}`);
+
+        fetch(request).then(
+          (resp) => {
+            cache.set(item.url, resp.clone());
+            this.handleResult(item, ItemState.Succeeded, resp);
+          },
+          (reason) => this.handleResult(item, ItemState.Failed, reason)
+        );
+      }
     }
   }
 

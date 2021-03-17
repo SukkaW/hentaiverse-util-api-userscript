@@ -1,6 +1,12 @@
 # API Document
 
-## `setMaxNetworkConnections(maxConnections: number): void`
+## HVULAPI
+
+### setMaxNetworkConnections
+
+```ts
+setMaxNetworkConnections(maxConnections: number): void
+```
 
 According to the [Rules description](https://forums.e-hentai.org/index.php?showtopic=243549) by Nezu:
 
@@ -12,7 +18,13 @@ HVULAPI set a default max connections limit as `4`. However, since your users mi
 hv.setMaxNetworkConnections(2);
 ```
 
-## `getStamina(): number | null`
+## Stamina
+
+### getStamina
+
+```ts
+getStamina(): number | null
+```
 
 Read and return current stamina. Return `null` when in-battle (`#stamina_readout` element just doesn't exist).
 
@@ -21,3 +33,34 @@ hv.getStamina();
 
 // 79
 ```
+
+## Item Inventory
+
+### getItemInventoryAsync
+
+```ts
+getItemInventoryAsync(): Promise<Record<string, number>>
+```
+
+Fetch item inventory information: items and its amount.
+
+```js
+const inventory = await hv.getItemInventoryAsync();
+console.log(inventory);
+
+/* {
+  Health Draught: 1000
+  Health Potion: 1000
+  ...
+} */
+```
+
+### getItemInventory
+
+```ts
+getItemInventory(onerror: function, onload: (arg: Record<string, number>) => any): void
+```
+
+Synchronous version of `getItemInventoryAsync`.
+
+## Character

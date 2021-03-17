@@ -2,7 +2,7 @@
 
 ## Introduction
 
-A user-land userscript API served as a dependency. HentaiVerse User-Land API allows HentaiVerse userscript author to get required information with simple APIs. Besides a synchronous API the package provides an asynchronous API, which allows you to build non-blocking tasks. The ultimate goal of this project is to make writing HentaiVerse userscript much simpler.
+A user-land userscript API served as a dependency. HentaiVerse User-Land API allows HentaiVerse userscript author to get required information with simple APIs. Besides a synchronous API the package also provides an asynchronous API, which allows you to build non-blocking userscript. The ultimate goal of this project is to make writing HentaiVerse userscript much simpler.
 
 ## Installation
 
