@@ -1,4 +1,4 @@
-import { callbackify } from '../util/callackify';
+import { callbackify } from '../util/callbackify';
 import { logger } from '../util/logger';
 import { getValue, setValue } from '../util/store';
 

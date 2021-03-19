@@ -1,4 +1,4 @@
-import { callbackify } from '../util/callackify';
+import { callbackify } from '../util/callbackify';
 import { FetchQueue } from '../util/fetch-queue';
 export const fetchQueue = new FetchQueue();
 

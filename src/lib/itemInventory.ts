@@ -1,6 +1,6 @@
 import { fetchQueue } from './fetchQueue';
 import { logger } from '../util/logger';
-import { callbackify } from '../util/callackify';
+import { callbackify } from '../util/callbackify';
 
 /**
  * ```js
