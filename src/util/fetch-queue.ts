@@ -6,6 +6,7 @@ const cache = new Map<string, Response>();
 export interface IFetchQueueOptions {
   /** Max live connection count of the queue. Default to 4. */
   maxConnections?: number;
+  interval?: number;
 }
 
 /** Promise that can cancel the request. */
@@ -25,6 +26,7 @@ enum ItemState {
 interface IQueueItem {
   readonly url: string;
   readonly init?: RequestInit;
+  readonly disableCache?: boolean;
   readonly resolve: (value: Response) => void;
   readonly reject: (reason?: any) => void;
   state: ItemState;
@@ -50,6 +52,8 @@ export class FetchQueue {
   private pendingItems: IQueueItem[] = [];
   private activeItems: IQueueItem[] = [];
   private isPaused = false;
+  private lastCalled: number;
+  private timer?: number;
 
   /**
    * Create a fetch queue.
@@ -58,8 +62,11 @@ export class FetchQueue {
   public constructor(options?: IFetchQueueOptions) {
     this.options = {
       maxConnections: 4,
+      interval: 300,
       ...options
     };
+
+    this.lastCalled = Date.now();
   }
 
   /**
@@ -69,10 +76,10 @@ export class FetchQueue {
    * @param init Request init for fetch() API
    * @returns {IFetchQueuePromise} Request promise that can also cancel the request.
    */
-  public add(url: string, init?: RequestInit): IFetchQueuePromise<Response> {
+  public add(url: string, init?: RequestInit, disableCache?: boolean): IFetchQueuePromise<Response> {
     let item: IQueueItem;
     const promise = new Promise((resolve, reject) => {
-      item = { url, init, resolve, reject, state: ItemState.Pending };
+      item = { url, init, resolve, reject, state: ItemState.Pending, disableCache };
       this.pendingItems.push(item);
     }) as IFetchQueuePromise;
     promise.cancel = () => this.cancel(item);
@@ -115,6 +122,18 @@ export class FetchQueue {
   }
 
   private checkNext() {
+    const threshold = this.lastCalled + (this.options.interval || 300);
+    const now = Date.now();
+
+    // Adjust timer if it is called too early
+    if (now < threshold) {
+      if (this.timer) {
+        clearTimeout(this.timer);
+      }
+      this.timer = setTimeout(this.checkNext, threshold - now) as unknown as number;
+      return;
+    }
+
     while (!this.isPaused && this.pendingCount > 0 && this.activeCount < this.options.maxConnections!) {
       const item = this.pendingItems.shift()!;
       this.activeItems.push(item);
@@ -122,7 +141,7 @@ export class FetchQueue {
 
       const request = new Request(item.url, item.init);
 
-      if (cache.has(item.url)) {
+      if (cache.has(item.url) && (item.init?.method === 'GET' || typeof item.init === 'undefined') && item.disableCache !== true) {
         logger.debug('#fetchQueue', `Cache Hit: ${item.url}`);
         this.handleResult(item, ItemState.Succeeded, cache.get(item.url));
       } else {
@@ -130,7 +149,9 @@ export class FetchQueue {
 
         fetch(request).then(
           (resp) => {
-            cache.set(item.url, resp.clone());
+            if (item.init?.method === 'GET' || typeof item.init === 'undefined') {
+              cache.set(item.url, resp.clone());
+            }
             this.handleResult(item, ItemState.Succeeded, resp);
           },
           (reason) => this.handleResult(item, ItemState.Failed, reason)
@@ -151,6 +172,11 @@ export class FetchQueue {
       }
     }
 
-    this.checkNext();
+    this.lastCalled = Date.now();
+    if (this.pendingCount > 0) {
+      this.timer = setTimeout(this.checkNext, this.options.interval || 300) as unknown as number;
+    } else {
+      this.timer = undefined;
+    }
   }
 }
