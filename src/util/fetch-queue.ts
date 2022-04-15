@@ -56,7 +56,7 @@ const enum ItemState {
 }
 
 /** Promise that can cancel the request. */
-interface FetchQueuePromise<T = any> extends Promise<T> {
+interface FetchQueuePromise<T> extends Promise<T> {
   /** Cancel the request and remove it from the queue. */
   cancel(): void;
 }
@@ -98,12 +98,12 @@ export class FetchQueue {
   /**
    * Add a request to the end of the queue.
    */
-  public add(url: string, init?: RequestInit, useGM = false): FetchQueuePromise<Response> {
+  public add(url: string, init?: RequestInit, useGM = false) {
     let item: FetchQueueItem;
     const promise = new Promise((resolve, reject) => {
       item = { url, init, resolve, reject, useGM, state: ItemState.Pending };
       this.pendingItems.push(item);
-    }) as FetchQueuePromise;
+    }) as FetchQueuePromise<Response>;
     promise.cancel = () => this.cancel(item);
 
     this.checkNext();
