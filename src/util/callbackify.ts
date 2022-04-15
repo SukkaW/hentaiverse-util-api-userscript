@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 const callbackifyOnRejected = (reason: any, cb: (...args: any[]) => unknown) => {
   // `!reason` guard inspired by bluebird (Ref: https://goo.gl/t5IS6M).
   // Because `null` is a special error value in callbacks which means "no error
@@ -11,6 +10,7 @@ const callbackifyOnRejected = (reason: any, cb: (...args: any[]) => unknown) => 
 };
 
 export function callbackify(fn: () => Promise<void>): (callback: (err: Error) => void) => void;
+export function callbackify(fn: () => Promise<void>): (callback: (err: null) => void) => void;
 export function callbackify<TResult>(fn: () => Promise<TResult>): (callback: (err: Error, result: TResult) => void) => void;
 export function callbackify<T1>(fn: (arg1: T1) => Promise<void>): (arg1: T1, callback: (err: Error) => void) => void;
 export function callbackify<T1, TResult>(fn: (arg1: T1) => Promise<TResult>): (arg1: T1, callback: (err: Error, result: TResult) => void) => void;
@@ -34,7 +34,8 @@ export function callbackify<T1, T2, T3, T4, T5, T6>(
 export function callbackify<T1, T2, T3, T4, T5, T6, TResult>(
   fn: (arg1: T1, arg2: T2, arg3: T3, arg4: T4, arg5: T5, arg6: T6) => Promise<TResult>
 ): (arg1: T1, arg2: T2, arg3: T3, arg4: T4, arg5: T5, arg6: T6, callback: (err: Error | null, result: TResult) => void) => void;
-export function callbackify(original: any) {
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function callbackify(original: Function): Function {
   // We DO NOT return the promise as it gives the user a false sense that
   // the promise is actually somehow related to the callback's execution
   // and that the callback throwing will reject the promise.

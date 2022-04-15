@@ -25,6 +25,7 @@ export default [{
     format: 'iife',
     file: 'dist/userscript/hv-userland-api.user.js',
     name: 'unsafeWindow.HVUserLandApi',
+    esModule: false,
     plugins: [
       metablock(userScriptMetaBlockConfig)
     ],

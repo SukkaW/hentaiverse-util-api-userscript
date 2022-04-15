@@ -7,12 +7,19 @@ export const fetchQueue = new FetchQueue();
  * > Out of battle, rate limits are unspecified, but may be enforced automatically by the server resulting in a lockout (which prevents any further actions or page loads). Regularly triggering this limiter risks bans. Script writers should avoid using multiple connection threads for requests, or limit them to the same 4 per second maximum for the safety of users.
  *
  * In order to avoid stock limit ban caused by sending too much requests, it is recommended to use HVULAPI built-in fetch queue to send requests.
+ *
  * ```js
  * hv.fetchQueue.fetchAsync('?s=Bazaar&ss=es', { method: 'GET' })
  * ```
+ *
+ * `fetchAsync` will use `fetch` by default. However, if you want to use `GM_xmlhttpRequest` to bypass CORS limitation, you can enable `useGM`:
+ *
+ * ```js
+ * hv.fetchQueue.fetchAsync('?s=Bazaar&ss=es', { method: 'GET' }, true)
+ * ```
  */
-export function fetchAsync(url: string, init?: RequestInit): Promise<Response> {
-  return fetchQueue.add(url, init);
+export function fetchAsync(url: string, init?: RequestInit, useGM?: boolean): Promise<Response> {
+  return fetchQueue.add(url, init, useGM);
 }
 
 /**

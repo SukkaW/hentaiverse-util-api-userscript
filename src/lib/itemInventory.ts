@@ -21,10 +21,10 @@ export async function getItemInventoryAsync(): Promise<Record<string, number>> {
     const item = match[1];
     const number = Number(match[2]);
 
-    if (!isNaN(number)) {
-      data[item] = number;
-    } else {
+    if (Number.isNaN(number)) {
       logger.error('#getItemInventory', `Amount of ${item} parsed as NaN!`, match);
+    } else {
+      data[item] = number;
     }
   }
 

@@ -1,4 +1,4 @@
-import { HVULAPI } from '../@types/hvulapi';
+import { HVULAPI } from '../types';
 
 export async function getValue<T extends keyof HVULAPI.StoredValue>(key: T): Promise<HVULAPI.StoredValue[T] | undefined | null> {
   return GM.getValue(key);

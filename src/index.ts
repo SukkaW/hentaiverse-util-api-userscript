@@ -5,6 +5,7 @@ export const VERSION = '0.0.1';
 export type { FetchQueue } from './util/fetch-queue';
 
 export * as debug from './util/logger';
+export * as is from './lib/is';
 export * as ui from './lib/ui';
 export * as fetchQueue from './lib/fetchQueue';
 export * as stamina from './lib/stamina';

@@ -31,3 +31,6 @@ export async function getDifficultyAsync(): Promise<string | null> {
 }
 
 export const getDifficulty = callbackify(getDifficultyAsync);
+
+// export async function getPersonaIdAsync(): Promise<string | null> {
+// }
