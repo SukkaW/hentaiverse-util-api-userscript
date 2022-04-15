@@ -1,5 +1,38 @@
 import { logger } from './logger';
 
+// https://github.com/axios/axios/blob/master/lib/helpers/parseHeaders.js
+// Headers whose duplicates are ignored by node
+// c.f. https://nodejs.org/api/http.html#http_message_headers
+const ignoreDuplicateHeaders = new Set([
+  'age', 'authorization', 'content-length', 'content-type', 'etag',
+  'expires', 'from', 'host', 'if-modified-since', 'if-unmodified-since',
+  'last-modified', 'location', 'max-forwards', 'proxy-authorization',
+  'referer', 'retry-after', 'user-agent'
+]);
+function parseResponseHeaders(headerStr: string | null) {
+  const parsed: Record<string, string> = {};
+  if (!headerStr) return parsed;
+
+  let key: string;
+  let val: string;
+  let i: number;
+
+  const headerLines = headerStr.split('\n');
+
+  for (const line of headerLines) {
+    i = line.indexOf(':');
+    key = line.substring(0, i).trim().toLowerCase();
+    val = line.substring(i + 1).trim();
+
+    if (key) {
+      if (parsed[key] && ignoreDuplicateHeaders.has(key)) continue;
+      parsed[key] = parsed[key] ? `${parsed[key]}, ${val}` : val;
+    }
+  }
+
+  return parsed;
+}
+
 interface FetchQueueOption {
   maxConnections?: number;
   interval?: number;
@@ -185,7 +218,8 @@ export class FetchQueue {
           onload(r) {
             const resp = new Response(r.responseText, {
               status: r.status,
-              statusText: r.statusText
+              statusText: r.statusText,
+              headers: parseResponseHeaders(r.responseHeaders)
             });
 
             self.handleResult(item, ItemState.Succeeded, resp);
