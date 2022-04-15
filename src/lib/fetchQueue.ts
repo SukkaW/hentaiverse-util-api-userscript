@@ -1,6 +1,18 @@
 import { callbackify } from '../util/callbackify';
 import { FetchQueue } from '../util/fetch-queue';
-export const fetchQueue = new FetchQueue();
+
+const symbol = Symbol.for('HVULAPI Shared FetchQueue Instance');
+
+declare global {
+  interface Window {
+    [symbol]?: FetchQueue;
+  }
+}
+
+// Make sure we share the same FetchQueue instance across all scripts.
+globalThis.unsafeWindow = globalThis.unsafeWindow || {};
+export const fetchQueue = unsafeWindow[symbol] ?? new FetchQueue();
+unsafeWindow[symbol] ??= fetchQueue;
 
 /**
  * According to the [Rules description](https://forums.e-hentai.org/index.php?showtopic=243549) by Nezu:
